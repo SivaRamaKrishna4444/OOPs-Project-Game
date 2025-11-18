@@ -22,6 +22,6 @@ void bulletuu::update()
 void bulletuu::draw()
 {
     if(active){
-        DrawRectangle(position.x,position.y,4,15,{243,216,63,255});
+        DrawRectangle(position.x,position.y,4,15,{255, 0, 255, 255});
     }
 }

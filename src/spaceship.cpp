@@ -2,7 +2,7 @@
 
 Spaceship :: Spaceship()
 {
-    image = LoadTexture("images/spaceship.png");
+    image = LoadTexture("images/star_trek.png");
     position.x = (GetScreenWidth() - image.width)/2;
     position.y = GetScreenHeight() - image.height;
 
