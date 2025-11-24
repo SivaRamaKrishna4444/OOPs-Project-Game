@@ -3,7 +3,7 @@
 Spaceship :: Spaceship()
 {
     image = LoadTexture("images/spaceship.png");
-    position.x = (GetScreenWidth() - image.width)/2;
+    position.x = (GetScreenWidth() - image.width)/2;     //to get the position of spaceship initially in bottom middle
     position.y = GetScreenHeight() - image.height;
 
     lastPushpatime = 0.0;
@@ -11,18 +11,18 @@ Spaceship :: Spaceship()
 
 Spaceship :: ~Spaceship()
 {
-    UnloadTexture(image);
+    UnloadTexture(image);   //destructor, it will unload texture of image
 }
 
 void Spaceship :: Draw()
 {
-    DrawTextureV(image,position,WHITE);
+    DrawTextureV(image,position,WHITE);   //it will draw the image of Spaceshippuu
 }
 
 void Spaceship::MoveLeft()
 {
-    position.x = position.x - 5;
-    if(position.x < 0)
+    position.x = position.x - 5;  //to move left, position is subtracted
+    if(position.x < 0)    //it will move upto left end and if it less than that it will come back to end..
     {
         position.x = 0;
     }
@@ -30,8 +30,8 @@ void Spaceship::MoveLeft()
 
 void Spaceship::MoveRight()
 {
-    position.x = position.x + 5;
-    if(position.x > (GetScreenWidth() - image.width))
+    position.x = position.x + 5;   //to move right, position is added
+    if(position.x > (GetScreenWidth() - image.width))    //it will move upto right end, and if it greater than screen width it will come back..
     {
         position.x = GetScreenWidth() - image.width;
     }
@@ -39,7 +39,7 @@ void Spaceship::MoveRight()
 
 void Spaceship::Pushpa()
 {
-    if(GetTime() - lastPushpatime >= 0.15)
+    if(GetTime() - lastPushpatime >= 0.15)    //bullet will be fired at a certain interval of 0.15 (ms)
     {
         bullets.push_back(bulletuu({position.x + image.width/2,position.y},-6));
         lastPushpatime = GetTime();

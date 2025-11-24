@@ -9,5 +9,5 @@ class bulletuu{
         bulletuu(Vector2 position,int speed);
         void update();
         void draw();
-        bool active;
+        bool active;    // if bullet is inside the window or not..
 };

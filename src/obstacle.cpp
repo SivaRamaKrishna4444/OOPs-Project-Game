@@ -1,7 +1,7 @@
 #include "obstacle.hpp"
 
 
-std :: vector<std::vector<int>> Obstacle:: grid = {
+std :: vector<std::vector<int>> Obstacle:: grid = {                     //design for shields(4)
         {0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
         {0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0},
         {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},

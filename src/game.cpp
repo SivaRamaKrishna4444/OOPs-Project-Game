@@ -37,15 +37,15 @@ void Game::Update()
 
 void Game::HandleInput()
 {
-    if(IsKeyDown(KEY_LEFT))
+    if(IsKeyDown(KEY_LEFT))     //if key pressed is left, move left
     {
         spaceship.MoveLeft();
     }
-    if(IsKeyDown(KEY_RIGHT))
+    if(IsKeyDown(KEY_RIGHT))   // if key pressed is right, move right
     {
-        spaceship.MoveRight();
+        spaceship.MoveRight(); 
     }
-    if(IsKeyDown(KEY_SPACE))
+    if(IsKeyDown(KEY_SPACE))   //if key pressed is space, then fire(pushpa)(bullet)
     {
         spaceship.Pushpa();
     }
