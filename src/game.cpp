@@ -4,10 +4,16 @@
 Game ::Game()
 {
     obstacles = CreateObstacles();
+    aliens = CreateAliens();
+    aliensDirection = 1;
+    timeLastAlienPushpaad = 0.0;
+    timeLastSpawn = 0.0;
+    mysteryShipSpawnInterval = GetRandomValue(10,20);
 }
 
 Game ::~Game()
 {
+    Alien::UnloadImages();  // to unload texture data..(images)
 }
 
 void Game ::Draw()
@@ -22,17 +28,44 @@ void Game ::Draw()
     for(auto& obstacle: obstacles){
         obstacle.Draw();
     }
+
+    for(auto& alien : aliens){
+        alien.Draw();
+    }
+
+    for(auto& bulletuu: alienBulletsuu){
+        bulletuu.draw();
+    }
+
+    mysteryship.Draw();
 }
 
 void Game::Update()
 {
+    double currentTime = GetTime();
+    if(currentTime - timeLastSpawn > mysteryShipSpawnInterval){
+        mysteryship.Spawn();
+        timeLastSpawn = GetTime();
+        mysteryShipSpawnInterval = GetRandomValue(10,20);
+    }
+
     for(auto &bullet : spaceship.bullets)
     {
         bullet.update();
     }
 
+    MoveAliens();   //it should move for enitre game
+
+    AlienPushpaBulletuu();
+
+    for(auto&bulletuu : alienBulletsuu){   //for every bullet in alienbulletuu , update the bullet..
+        bulletuu.update();
+    }
     DeleteInactiveBullets();
     // std::cout<<"Vector Size: "<<spaceship.bullets.size()<<std::endl;
+    mysteryship.Update();
+
+    CheckForCollisions();
 }
 
 void Game::HandleInput()
@@ -64,6 +97,17 @@ void Game::DeleteInactiveBullets()
             ++ it;
         }
     }
+
+    for(auto it = alienBulletsuu.begin(); it!= alienBulletsuu.end();){
+        if(!it->active)
+        {
+            it = alienBulletsuu.erase(it);
+        }
+        else
+        {
+            ++ it;
+        }
+    }
 }
 
 std::vector<Obstacle> Game::CreateObstacles()
@@ -76,4 +120,142 @@ std::vector<Obstacle> Game::CreateObstacles()
         obstacles.push_back(Obstacle({offsetX,float(GetScreenHeight() - 100)}));
     }
     return obstacles;
+}
+
+std::vector<Alien> Game::CreateAliens()
+{
+
+    std::vector<Alien> aliens;
+    for(int row = 0 ; row < 5 ; row++){   //5 rows of aliens
+
+        int alienType;   //for the type of alien(we have 3 types)
+        if(row == 0){
+            alienType = 3;
+        }
+        else if (row == 1 || row == 2){
+            alienType = 2;
+        }
+        else {
+            alienType = 1;
+        }
+        for(int column = 0 ; column < 11; column++){   // 11 columns of aliens
+            float x = 75 + column * 55;    //cellsize is hardcoded to 55 pixels
+            float y = 110 + row * 55;      // 75,110 adding to them for crct position of aliens in centre
+            aliens.push_back(Alien(alienType,{x,y}));
+        }
+    }
+    return aliens;
+}
+
+void Game::MoveAliens()
+{
+
+    for(auto&alien : aliens){
+        if(alien.position.x + alien.alienImages[alien.type - 1].width>GetScreenWidth()){
+            aliensDirection = -1;   //move until the end of right screen and moves leftt direction 
+            MoveDownAliens(4); //move all the aliens down by 4 pixels when it hit right screen
+        }
+        if(alien.position.x < 0){
+            aliensDirection = 1;  //move until the end of left screen and moves right directionnn
+            MoveDownAliens(4); //move all the aliens down by 4 pixels when it hit left screen
+        }
+
+        alien.Update(aliensDirection);  //updates every aliens
+    }
+}
+
+void Game::MoveDownAliens(int distance)
+{
+    for(auto&alien : aliens){
+        alien.position.y += distance;
+    }
+}
+
+void Game::AlienPushpaBulletuu()
+{
+    double currentTime = GetTime();
+    if(currentTime - timeLastAlienPushpaad >= AlienBulletPushpainterval && !aliens.empty()){
+
+        int randomIndex = GetRandomValue(0,aliens.size()-1);
+        Alien& alien = aliens[randomIndex];
+        alienBulletsuu.push_back(bulletuu({ alien.position.x + alien.alienImages[alien.type-1].width/2,
+                                            alien.position.y + alien.alienImages[alien.type-1].height},6));  //6 the speed of bullet
+
+        timeLastAlienPushpaad = GetTime();
+    }
+}
+
+
+void Game::CheckForCollisions()
+{
+    // Spaceship bulletsuu
+    for(auto& bulletuu : spaceship.bullets){
+        auto it = aliens.begin();
+        while(it != aliens.end()){
+            if(CheckCollisionRecs(it -> getRectangle(),bulletuu.getRectangle())){
+                it = aliens.erase(it);
+                bulletuu.active = false;
+            }else{
+                ++it;
+            }
+        }
+        
+        for(auto& obstacle: obstacles){
+            auto it = obstacle.blocks.begin();
+            while(it != obstacle.blocks.end()){
+                if(CheckCollisionRecs(it-> getRectangle(), bulletuu.getRectangle())){
+                    it = obstacle.blocks.erase(it);
+                    bulletuu.active = false;
+                }else{
+                    ++it;
+                }
+            }
+        }
+
+        if(CheckCollisionRecs(mysteryship.getRectangle(),bulletuu.getRectangle())){
+            mysteryship.alive = false;
+            bulletuu.active = false;
+        }
+    }
+
+    // Alien Bulletsuuu
+
+    for(auto&bulletuu : alienBulletsuu){
+        if(CheckCollisionRecs(bulletuu.getRectangle(), spaceship.getRectangle())){
+            bulletuu.active = false;
+            std :: cout<< "Spaceship Hitttuu"<<std ::endl;
+        }
+
+        for(auto& obstacle: obstacles){
+            auto it = obstacle.blocks.begin();
+            while(it != obstacle.blocks.end()){
+                if(CheckCollisionRecs(it-> getRectangle(), bulletuu.getRectangle())){
+                    it = obstacle.blocks.erase(it);
+                    bulletuu.active = false;
+                }else{
+                    ++it;
+                }
+            }
+        }
+    }
+
+    // Alien Collision with Obstacle
+    for(auto& alien : aliens){
+        for(auto&obstacle : obstacles){
+            auto it = obstacle.blocks.begin();
+            while(it != obstacle.blocks.end()){
+                if(CheckCollisionRecs(it -> getRectangle(), alien.getRectangle())){
+                    it = obstacle.blocks.erase(it);
+                }else{
+                    it++;
+                }
+            }
+
+        }
+
+        if(CheckCollisionRecs(alien.getRectangle(),spaceship.getRectangle())){
+            std::cout<<" SPaceship hit by Alienuu"<< std::endl;
+        }
+    }
+    
 }

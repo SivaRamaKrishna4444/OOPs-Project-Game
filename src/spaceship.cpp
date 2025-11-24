@@ -46,3 +46,8 @@ void Spaceship::Pushpa()
     }
     
 }
+
+Rectangle Spaceship::getRectangle()
+{
+    return {position.x,position.y,float(image.width),float(image.height)};  //gives the rectangle of the spaceshippp
+}

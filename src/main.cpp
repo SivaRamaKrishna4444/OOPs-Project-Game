@@ -19,7 +19,6 @@ int main()
         BeginDrawing();
         ClearBackground(grey);   //backgorund colour to be grey.. 
         game.Draw();     //draw the game(spaceship,shield,bullets..)
-
         EndDrawing();
     }
 

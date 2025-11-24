@@ -7,4 +7,5 @@ class Block{
     public:
         Block(Vector2 position);
         void Draw();
+        Rectangle getRectangle(); 
 };
