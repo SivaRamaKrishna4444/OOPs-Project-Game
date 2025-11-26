@@ -1,5 +1,6 @@
 #include "game.hpp"
 #include<iostream>
+#include<fstream>
 
 Game ::Game()
 {
@@ -205,6 +206,7 @@ void Game::CheckForCollisions()
                 }else if(it->type == 3){
                     score+= 300;  //increasing by 300 if type 3
                 }
+                CheckForHighScore();
 
                 it = aliens.erase(it);
                 bulletuu.active = false;
@@ -229,6 +231,7 @@ void Game::CheckForCollisions()
             mysteryship.alive = false;
             bulletuu.active = false;
             score+=500;  //if mysteryship is pushpaad, then increase score by 500
+            CheckForHighScore();
         }
     }
 
@@ -291,8 +294,43 @@ void Game::InitGame()
     timeLastSpawn = 0.0;
     lives = 3;
     score = 0; //intially score = 0
+    highScore = loadHighScorefromFile(); //it will highscore from the filee
     run = true;
     mysteryShipSpawnInterval = GetRandomValue(10,20);   
+}
+
+void Game::CheckForHighScore()   //it will check for highscore and updte if it is greater than score
+{                               //called at spaceship hitting aliens and mysteryship
+    if(score>highScore){
+        highScore = score;
+        SaveHighScoreToFile(highScore);  //to save it to fileeuu
+    }
+}
+
+void Game::SaveHighScoreToFile(int highScore)  //write to a file //it will save the high score to a filee
+{
+    std::ofstream highScoreFile("highScore.txt");  //outputfile stream -- used to write data into a file(highScore.txt)
+    // if there is not file it will create or if there is that file it overwrites...
+    if(highScoreFile.is_open()){  //if the file exists and open to writee
+        highScoreFile << highScore;   //writes the number highScore to file // << operator here is used to->send this data into stream like cout
+        highScoreFile.close();   //closes the fileuuu
+    }else{
+        std::cerr<<"fAAiled to save highscore to file "<<std::endl;  //if file cannot be opened
+    }
+}
+
+int Game::loadHighScorefromFile()
+{
+    int loadedHighScore = 0;
+    std::ifstream highScoreFile("highScore.txt");  //to read from a file
+    if(highScoreFile.is_open()){
+        highScoreFile >> loadedHighScore;   //store the value from file to loadedHighScore like cin to take input;
+        highScoreFile.close();
+    }else{
+        std::cerr<<" fAAiled to load highscore from file"<<std::endl;
+    }
+
+    return loadedHighScore;
 }
 
 void Game::Reset()

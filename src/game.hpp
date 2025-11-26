@@ -27,6 +27,9 @@ class Game{
         void GameOver();   //if the game is over (lives = 0)
         void Reset();   //to reset the entire game 
         void InitGame();  //to initialise the game
+        void CheckForHighScore();  //check for high scoruuu
+        void SaveHighScoreToFile(int highScore); //to save the high score eeven if we close the game
+        int loadHighScorefromFile(); //it will take the highscore saved and load from file
     public:
         Game();
         ~Game();
@@ -36,4 +39,5 @@ class Game{
         void HandleInput();
         bool run;   //if the game is running or not
         int score; //for score 
+        int highScore; //for highscore in game
 };
