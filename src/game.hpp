@@ -30,6 +30,7 @@ class Game{
         void CheckForHighScore();  //check for high scoruuu
         void SaveHighScoreToFile(int highScore); //to save the high score eeven if we close the game
         int loadHighScorefromFile(); //it will take the highscore saved and load from file
+        Sound explosionSound;   //for explosion sound
     public:
         Game();
         ~Game();
@@ -40,4 +41,5 @@ class Game{
         bool run;   //if the game is running or not
         int score; //for score 
         int highScore; //for highscore in game
+        Music music;  //for music(bgm)
 };

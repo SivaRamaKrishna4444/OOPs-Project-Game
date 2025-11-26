@@ -4,12 +4,17 @@
 
 Game ::Game()
 {
+    music = LoadMusicStream("Sounds/music.ogg");  //loading music (bgm)
+    explosionSound = LoadSound("Sounds/explosion.ogg");  //loading explosion sound
+    PlayMusicStream(music);
     InitGame();   //initialises the game
 }
 
 Game ::~Game()
 {
     Alien::UnloadImages();  // to unload texture data..(images)
+    UnloadMusicStream(music);   //unloading music
+    UnloadSound(explosionSound);  //unloading explosionSound
 }
 
 void Game ::Draw()
@@ -199,6 +204,7 @@ void Game::CheckForCollisions()
         while(it != aliens.end()){
             if(CheckCollisionRecs(it -> getRectangle(),bulletuu.getRectangle()))
             {
+                PlaySound(explosionSound);   //playing explaosion sound when we hit any alien
                 if(it->type == 1){
                     score+= 100;   //increasing score by 100 if type 1
                 }else if(it->type == 2){
@@ -232,6 +238,7 @@ void Game::CheckForCollisions()
             bulletuu.active = false;
             score+=500;  //if mysteryship is pushpaad, then increase score by 500
             CheckForHighScore();
+            PlaySound(explosionSound);  //play explosion sound when we hit mystery ship
         }
     }
 

@@ -7,11 +7,13 @@ Spaceship :: Spaceship()
     position.y = GetScreenHeight() - image.height- 100;
 
     lastPushpatime = 0.0;
+    bulletSound =  LoadSound("Sounds/bullet.ogg");   //loads the bullet sound
 }
 
 Spaceship :: ~Spaceship()
 {
     UnloadTexture(image);   //destructor, it will unload texture of image
+    UnloadSound(bulletSound);  //unloads the bulletSound
 }
 
 void Spaceship :: Draw()
@@ -43,6 +45,7 @@ void Spaceship::Pushpa()
     {
         bullets.push_back(bulletuu({position.x + image.width/2,position.y},-6));
         lastPushpatime = GetTime();
+        PlaySound(bulletSound);   //plays the bulletSound if a bullet is pushpaadd
     }
     
 }

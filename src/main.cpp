@@ -17,8 +17,9 @@ int main()
     int window_height = 700;   //height of window
 
     InitWindow(window_width + offset,window_height + 2*offset,"Space Inavdersssuu");    //initalising windoowww
-    
-    Font font = LoadFontEx("Font/monogram.tff",64,0,0); //loading the font for text 
+    InitAudioDevice();  //initialises the audio system
+
+    Font font = LoadFontEx("Font/monogram.ttf",64,0,0); //loading the font for text 
     Texture2D spaceshipImage = LoadTexture("images/spaceship.png");  //spaceship image for showing no.of lives remaining
 
     SetTargetFPS(60);
@@ -27,6 +28,7 @@ int main()
 
     while(WindowShouldClose() == false)    //until we close that window or press Esc.. 
     {
+        UpdateMusicStream(game.music);
         game.HandleInput();   //interactive with the input (like pressing left,right,space...)
         game.Update();  
         BeginDrawing();
@@ -58,4 +60,5 @@ int main()
     }
 
     CloseWindow();   //closing the window after pressing Esc or closing the windoww..
+    CloseAudioDevice();  //close the audio system
 }

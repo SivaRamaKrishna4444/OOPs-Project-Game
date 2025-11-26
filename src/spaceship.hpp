@@ -8,6 +8,7 @@ class Spaceship{
         Texture2D image;   //for image of spaceship
         Vector2 position;   // for the posiiton of spaceship
         double lastPushpatime;   //it wilpl give last fire time
+        Sound bulletSound;  //for bulletSOund
     public: 
         Spaceship();  //coonstructor 
         ~Spaceship();   //destructor
