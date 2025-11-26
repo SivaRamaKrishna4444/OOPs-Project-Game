@@ -3,12 +3,7 @@
 
 Game ::Game()
 {
-    obstacles = CreateObstacles();
-    aliens = CreateAliens();
-    aliensDirection = 1;
-    timeLastAlienPushpaad = 0.0;
-    timeLastSpawn = 0.0;
-    mysteryShipSpawnInterval = GetRandomValue(10,20);
+    InitGame();   //initialises the game
 }
 
 Game ::~Game()
@@ -42,45 +37,54 @@ void Game ::Draw()
 
 void Game::Update()
 {
-    double currentTime = GetTime();
-    if(currentTime - timeLastSpawn > mysteryShipSpawnInterval){
-        mysteryship.Spawn();
-        timeLastSpawn = GetTime();
-        mysteryShipSpawnInterval = GetRandomValue(10,20);
+    if(run){    //if it is running it will update
+        double currentTime = GetTime();
+        if(currentTime - timeLastSpawn > mysteryShipSpawnInterval){
+            mysteryship.Spawn();
+            timeLastSpawn = GetTime();
+            mysteryShipSpawnInterval = GetRandomValue(10,20);
+        }
+
+        for(auto &bullet : spaceship.bullets)
+        {
+            bullet.update();
+        }
+
+        MoveAliens();   //it should move for enitre game
+    
+        AlienPushpaBulletuu();
+
+        for(auto&bulletuu : alienBulletsuu){   //for every bullet in alienbulletuu , update the bullet..
+            bulletuu.update();
+        }
+        DeleteInactiveBullets();
+
+        mysteryship.Update();
+
+        CheckForCollisions();
+    } else{   //else after the game over if we press enter button it will reset and new game will start
+        if(IsKeyDown(KEY_ENTER)){
+            Reset();   //reset the entire game
+            InitGame();  //initialises the game
+        }
     }
-
-    for(auto &bullet : spaceship.bullets)
-    {
-        bullet.update();
-    }
-
-    MoveAliens();   //it should move for enitre game
-
-    AlienPushpaBulletuu();
-
-    for(auto&bulletuu : alienBulletsuu){   //for every bullet in alienbulletuu , update the bullet..
-        bulletuu.update();
-    }
-    DeleteInactiveBullets();
-    // std::cout<<"Vector Size: "<<spaceship.bullets.size()<<std::endl;
-    mysteryship.Update();
-
-    CheckForCollisions();
 }
 
 void Game::HandleInput()
 {
-    if(IsKeyDown(KEY_LEFT))     //if key pressed is left, move left
-    {
-        spaceship.MoveLeft();
-    }
-    if(IsKeyDown(KEY_RIGHT))   // if key pressed is right, move right
-    {
-        spaceship.MoveRight(); 
-    }
-    if(IsKeyDown(KEY_SPACE))   //if key pressed is space, then fire(pushpa)(bullet)
-    {
-        spaceship.Pushpa();
+    if(run){  //if the game is running
+        if(IsKeyDown(KEY_LEFT))     //if key pressed is left, move left
+        {
+            spaceship.MoveLeft();
+        }
+        if(IsKeyDown(KEY_RIGHT))   // if key pressed is right, move right
+        {
+            spaceship.MoveRight(); 
+        }
+        if(IsKeyDown(KEY_SPACE))   //if key pressed is space, then fire(pushpa)(bullet)
+        {
+            spaceship.Pushpa();
+        }
     }
 }
 
@@ -117,7 +121,7 @@ std::vector<Obstacle> Game::CreateObstacles()
 
     for(int i = 0 ; i < 4 ; i++){
         float offsetX = (i+1)*gap + i * obstacleWidth;
-        obstacles.push_back(Obstacle({offsetX,float(GetScreenHeight() - 100)}));
+        obstacles.push_back(Obstacle({offsetX,float(GetScreenHeight() - 200)}));
     }
     return obstacles;
 }
@@ -151,7 +155,7 @@ void Game::MoveAliens()
 {
 
     for(auto&alien : aliens){
-        if(alien.position.x + alien.alienImages[alien.type - 1].width>GetScreenWidth()){
+        if(alien.position.x + alien.alienImages[alien.type - 1].width>GetScreenWidth() -25){
             aliensDirection = -1;   //move until the end of right screen and moves leftt direction 
             MoveDownAliens(4); //move all the aliens down by 4 pixels when it hit right screen
         }
@@ -192,7 +196,16 @@ void Game::CheckForCollisions()
     for(auto& bulletuu : spaceship.bullets){
         auto it = aliens.begin();
         while(it != aliens.end()){
-            if(CheckCollisionRecs(it -> getRectangle(),bulletuu.getRectangle())){
+            if(CheckCollisionRecs(it -> getRectangle(),bulletuu.getRectangle()))
+            {
+                if(it->type == 1){
+                    score+= 100;   //increasing score by 100 if type 1
+                }else if(it->type == 2){
+                    score+= 200;   //increasing by 200 if typw 2
+                }else if(it->type == 3){
+                    score+= 300;  //increasing by 300 if type 3
+                }
+
                 it = aliens.erase(it);
                 bulletuu.active = false;
             }else{
@@ -215,6 +228,7 @@ void Game::CheckForCollisions()
         if(CheckCollisionRecs(mysteryship.getRectangle(),bulletuu.getRectangle())){
             mysteryship.alive = false;
             bulletuu.active = false;
+            score+=500;  //if mysteryship is pushpaad, then increase score by 500
         }
     }
 
@@ -223,7 +237,10 @@ void Game::CheckForCollisions()
     for(auto&bulletuu : alienBulletsuu){
         if(CheckCollisionRecs(bulletuu.getRectangle(), spaceship.getRectangle())){
             bulletuu.active = false;
-            std :: cout<< "Spaceship Hitttuu"<<std ::endl;
+            lives = lives - 1;
+            if(lives == 0){
+                GameOver();   //if lives is 0, then the game is over
+            }
         }
 
         for(auto& obstacle: obstacles){
@@ -254,8 +271,34 @@ void Game::CheckForCollisions()
         }
 
         if(CheckCollisionRecs(alien.getRectangle(),spaceship.getRectangle())){
-            std::cout<<" SPaceship hit by Alienuu"<< std::endl;
+            GameOver();  //if spaceship is colliding with aliens then also gameover
         }
     }
     
+}
+
+void Game::GameOver()
+{
+    run = false;  //if game over, then the run will set to false
+}
+
+void Game::InitGame()
+{  //initialises all the methods
+    obstacles = CreateObstacles();
+    aliens = CreateAliens();
+    aliensDirection = 1;
+    timeLastAlienPushpaad = 0.0;
+    timeLastSpawn = 0.0;
+    lives = 3;
+    score = 0; //intially score = 0
+    run = true;
+    mysteryShipSpawnInterval = GetRandomValue(10,20);   
+}
+
+void Game::Reset()
+{  //resets all the methods;;
+    spaceship.Reset();
+    aliens.clear();
+    alienBulletsuu.clear();
+    obstacles.clear();
 }

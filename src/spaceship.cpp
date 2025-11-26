@@ -4,7 +4,7 @@ Spaceship :: Spaceship()
 {
     image = LoadTexture("images/spaceship.png");
     position.x = (GetScreenWidth() - image.width)/2;     //to get the position of spaceship initially in bottom middle
-    position.y = GetScreenHeight() - image.height;
+    position.y = GetScreenHeight() - image.height- 100;
 
     lastPushpatime = 0.0;
 }
@@ -21,19 +21,19 @@ void Spaceship :: Draw()
 
 void Spaceship::MoveLeft()
 {
-    position.x = position.x - 5;  //to move left, position is subtracted
-    if(position.x < 0)    //it will move upto left end and if it less than that it will come back to end..
+    position.x = position.x - 7;  //to move left, position is subtracted
+    if(position.x < 25)    //it will move upto left end and if it less than that it will come back to end..
     {
-        position.x = 0;
+        position.x = 25;
     }
 }
 
 void Spaceship::MoveRight()
 {
     position.x = position.x + 5;   //to move right, position is added
-    if(position.x > (GetScreenWidth() - image.width))    //it will move upto right end, and if it greater than screen width it will come back..
+    if(position.x > (GetScreenWidth() - image.width - 25))    //it will move upto right end, and if it greater than screen width it will come back..
     {
-        position.x = GetScreenWidth() - image.width;
+        position.x = GetScreenWidth() - image.width - 25;
     }
 }
 
@@ -50,4 +50,11 @@ void Spaceship::Pushpa()
 Rectangle Spaceship::getRectangle()
 {
     return {position.x,position.y,float(image.width),float(image.height)};  //gives the rectangle of the spaceshippp
+}
+
+void Spaceship::Reset()
+{  //reset the spaceship position 
+    position.x = (GetScreenWidth() - image.width)/2.0f;
+    position.y = GetScreenHeight() - image.height - 100;
+    bullets.clear();
 }

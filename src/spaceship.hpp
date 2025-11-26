@@ -16,5 +16,6 @@ class Spaceship{
         void MoveRight();   //to move spaceship right
         void Pushpa();   // to fire (Pushpa->Firuuuuu)
         Rectangle getRectangle();   //to get the rectangle of the spaceship image
+        void Reset();  //to reset the positon of spaceship
         std::vector<bulletuu> bullets;
 };

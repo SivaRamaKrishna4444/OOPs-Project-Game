@@ -12,7 +12,7 @@ void bulletuu::update()
     position.y = position.y + speed;
     if(active)
     {
-        if(position.y > GetScreenHeight() || position.y < 0)     //if it goes outside of the window or top of window..
+        if(position.y > GetScreenHeight() - 100 || position.y < 25)     //if it goes outside of the window or top of window..
         {
             active = false;
         }

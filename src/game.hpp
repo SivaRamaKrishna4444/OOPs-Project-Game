@@ -24,10 +24,16 @@ class Game{
         float mysteryShipSpawnInterval;
         float timeLastSpawn;
         void CheckForCollisions();
+        void GameOver();   //if the game is over (lives = 0)
+        void Reset();   //to reset the entire game 
+        void InitGame();  //to initialise the game
     public:
         Game();
         ~Game();
         void Draw();
         void Update();
+        int lives;   //gives lives = 3;
         void HandleInput();
+        bool run;   //if the game is running or not
+        int score; //for score 
 };
