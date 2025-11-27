@@ -2,8 +2,8 @@
 
 bulletuu::bulletuu(Vector2 position, int speed)
 {
-    this->position = position;
-    this->speed = speed;
+    this->position = position;//accesing the objects
+    this->speed = speed;//accessing the objects 
     active = true;
 }
 
@@ -17,7 +17,7 @@ void bulletuu::update()
             active = false;
         }
     }
-}
+}   
 
 void bulletuu::draw()
 {
