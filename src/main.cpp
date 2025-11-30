@@ -10,7 +10,7 @@ std::string FormatWithLeadingZeros(int number,int width){  //for formating the s
 
 int main()
 {
-    Color grey = {29,29,27,255};
+    Color grey = {29,29,27,255};  //custom RGBA color creating a dark grey shade
     Color yellow = {243,216,63,255};
     int offset = 50;
     int window_width = 750;   //width of window
@@ -22,7 +22,7 @@ int main()
     Font font = LoadFontEx("Font/monogram.ttf",64,0,0); //loading the font for text 
     Texture2D spaceshipImage = LoadTexture("images/spaceship.png");  //spaceship image for showing no.of lives remaining
 
-    SetTargetFPS(60);
+    SetTargetFPS(60); //frame rate for our game
 
     Game game;
 
