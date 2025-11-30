@@ -2,12 +2,12 @@
 
 Texture2D Alien :: alienImages[3] = {};  //for the 3 types of aliens
 
-Alien::Alien(int type, Vector2 position)  //type,position of alien
+Alien::Alien(int type, Vector2 position)  //initializtion of alien with type and position
 {
     this->type = type;
     this->position = position;
 
-    if(alienImages[type-1].id == 0){
+    if(alienImages[type-1].id == 0){ //load structure only once for each type
 
     switch(type){
         case 1:
@@ -27,14 +27,14 @@ Alien::Alien(int type, Vector2 position)  //type,position of alien
 }
 
 void Alien :: Draw(){
-    DrawTextureV(alienImages[type-1],position,WHITE);   //draw the texture(image) 
+    DrawTextureV(alienImages[type-1],position,WHITE);   //draw the texture(image) at its position 
 }
 
 int Alien :: GetType(){
     return type;  //give the type of alien(1 or 2 or 3)
 }
 
-void Alien::UnloadImages()
+void Alien::UnloadImages() //unload textures from memory
 {
     for(int i = 0 ; i < 4 ; i++){
         UnloadTexture(alienImages[i]);   //unload texture(immage)  of all alien types
