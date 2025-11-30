@@ -2,9 +2,9 @@
 
 Spaceship :: Spaceship()
 {
-    image = LoadTexture("images/spaceship.png");
+    image = LoadTexture("images/spaceship.png"); //loading an spaceship image file 
     position.x = (GetScreenWidth() - image.width)/2;     //to get the position of spaceship initially in bottom middle
-    position.y = GetScreenHeight() - image.height- 100;
+    position.y = GetScreenHeight() - image.height- 100; //placing the image near bottom of the screen
 
     lastPushpatime = 0.0;
     bulletSound =  LoadSound("Sounds/bullet.ogg");   //loads the bullet sound
