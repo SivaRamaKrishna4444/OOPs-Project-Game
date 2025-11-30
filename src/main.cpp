@@ -12,6 +12,10 @@ int main()
 {
     Color grey = {29,29,27,255}; //background colur of the game using RGBA
     Color yellow = {243,216,63,255};// color used for boarders and text
+
+    Color grey = {29,29,27,255};  //custom RGBA color creating a dark grey shade
+    Color yellow = {243,216,63,255};
+
     int offset = 50;
     int window_width = 750;   //width of window
     int window_height = 700;   //height of window
@@ -23,6 +27,8 @@ int main()
     Texture2D spaceshipImage = LoadTexture("images/spaceship.png");  //spaceship image for showing no.of lives remaining
 
     SetTargetFPS(60); // game framerate
+
+    SetTargetFPS(60); //frame rate for our game
 
     Game game;
 
