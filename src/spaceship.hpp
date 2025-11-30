@@ -10,7 +10,7 @@ class Spaceship{
         double lastPushpatime;   //it wilpl give last fire time
         Sound bulletSound;  //for bulletSOund
     public: 
-        Spaceship();  //coonstructor 
+        Spaceship();  //constructor 
         ~Spaceship();   //destructor
         void Draw();   //to draw spaceship 
         void MoveLeft();   //to move the spaceeship left
