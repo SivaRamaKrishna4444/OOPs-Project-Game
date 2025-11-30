@@ -3,15 +3,15 @@
 #include <string>
 
 std::string FormatWithLeadingZeros(int number,int width){  //for formating the score with leading zeros 
-    std::string numberText = std::to_string(number);
+    std::string numberText = std::to_string(number); //convert number to string
     int leadingZeroes = width - numberText.length();   //5 digit long with with remaining digits as zeroes
-    return numberText = std::string(leadingZeroes,'0')+numberText;
+    return numberText = std::string(leadingZeroes,'0')+numberText; //add zeroes in front of number
 }
 
 int main()
 {
-    Color grey = {29,29,27,255};
-    Color yellow = {243,216,63,255};
+    Color grey = {29,29,27,255}; //background colur of the game using RGBA
+    Color yellow = {243,216,63,255};// color used for boarders and text
     int offset = 50;
     int window_width = 750;   //width of window
     int window_height = 700;   //height of window
@@ -22,15 +22,15 @@ int main()
     Font font = LoadFontEx("Font/monogram.ttf",64,0,0); //loading the font for text 
     Texture2D spaceshipImage = LoadTexture("images/spaceship.png");  //spaceship image for showing no.of lives remaining
 
-    SetTargetFPS(60);
+    SetTargetFPS(60); // game framerate
 
     Game game;
 
     while(WindowShouldClose() == false)    //until we close that window or press Esc.. 
     {
-        UpdateMusicStream(game.music);
+        UpdateMusicStream(game.music); //keep background music playing
         game.HandleInput();   //interactive with the input (like pressing left,right,space...)
-        game.Update();  
+        game.Update();  //update game objects
         BeginDrawing();
         ClearBackground(grey);   //backgorund colour to be grey.. 
         DrawRectangleRoundedLinesEx({10,10,780,780},0.18f,20,2,yellow);
