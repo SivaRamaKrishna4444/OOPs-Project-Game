@@ -6,11 +6,11 @@ Game ::Game()
 {
     music = LoadMusicStream("Sounds/music.ogg");  //loading music (bgm)
     explosionSound = LoadSound("Sounds/explosion.ogg");  //loading explosion sound
-    PlayMusicStream(music);
+    PlayMusicStream(music); //start playing background music
     InitGame();   //initialises the game
 }
 
-Game ::~Game()
+Game ::~Game() //runs when game ends and clean memory
 {
     Alien::UnloadImages();  // to unload texture data..(images)
     UnloadMusicStream(music);   //unloading music
@@ -19,53 +19,54 @@ Game ::~Game()
 
 void Game ::Draw()
 {
-    spaceship.Draw();
+    spaceship.Draw(); //draw spaceship
 
-    for(auto& bullet : spaceship.bullets)
+    for(auto& bullet : spaceship.bullets) //draw spaceship bullets
     {
         bullet.draw();
     }
 
-    for(auto& obstacle: obstacles){
+    for(auto& obstacle: obstacles){ //draw obstacles
         obstacle.Draw();
     }
 
-    for(auto& alien : aliens){
+    for(auto& alien : aliens){ //draw alienns
         alien.Draw();
     }
 
-    for(auto& bulletuu: alienBulletsuu){
+    for(auto& bulletuu: alienBulletsuu){ //draw alien bullets
         bulletuu.draw();
     }
 
-    mysteryship.Draw();
+    mysteryship.Draw(); // draw mysteryship
 }
 
-void Game::Update()
+void Game::Update() //updating every frame
 {
     if(run){    //if it is running it will update
         double currentTime = GetTime();
+        //spawn mysteryship for every random time between 10 and 20 seconds
         if(currentTime - timeLastSpawn > mysteryShipSpawnInterval){
             mysteryship.Spawn();
             timeLastSpawn = GetTime();
             mysteryShipSpawnInterval = GetRandomValue(10,20);
         }
 
-        for(auto &bullet : spaceship.bullets)
+        for(auto &bullet : spaceship.bullets) //update spaceship bullets
         {
             bullet.update();
         }
 
         MoveAliens();   //it should move for enitre game
     
-        AlienPushpaBulletuu();
+        AlienPushpaBulletuu(); //random alien fires bullet
 
         for(auto&bulletuu : alienBulletsuu){   //for every bullet in alienbulletuu , update the bullet..
             bulletuu.update();
         }
-        DeleteInactiveBullets();
+        DeleteInactiveBullets(); //remove bullets that went off screen
 
-        mysteryship.Update();
+        mysteryship.Update(); //update mysteryship
 
         CheckForCollisions();
     } else{   //else after the game over if we press enter button it will reset and new game will start
@@ -76,7 +77,7 @@ void Game::Update()
     }
 }
 
-void Game::HandleInput()
+void Game::HandleInput() //check keyboard inputs for controlling spaceships
 {
     if(run){  //if the game is running
         if(IsKeyDown(KEY_LEFT))     //if key pressed is left, move left
@@ -95,9 +96,9 @@ void Game::HandleInput()
 }
 
 
-void Game::DeleteInactiveBullets()
+void Game::DeleteInactiveBullets() //remove bullets that are inactive
 {
-    for(auto it = spaceship.bullets.begin(); it!= spaceship.bullets.end();){
+    for(auto it = spaceship.bullets.begin(); it!= spaceship.bullets.end();){ 
         if(!it->active)
         {
             it = spaceship.bullets.erase(it);
@@ -119,10 +120,10 @@ void Game::DeleteInactiveBullets()
         }
     }
 }
-
+//creating a set of obstacles
 std::vector<Obstacle> Game::CreateObstacles()
 {
-    int obstacleWidth = Obstacle :: grid[0].size()*3;
+    int obstacleWidth = Obstacle :: grid[0].size()*3; //width of one obstacle
     float gap = (GetScreenWidth() - (4*obstacleWidth))/5;
 
     for(int i = 0 ; i < 4 ; i++){
@@ -131,7 +132,7 @@ std::vector<Obstacle> Game::CreateObstacles()
     }
     return obstacles;
 }
-
+//creating aliens in rows and columns
 std::vector<Alien> Game::CreateAliens()
 {
 
@@ -157,7 +158,7 @@ std::vector<Alien> Game::CreateAliens()
     return aliens;
 }
 
-void Game::MoveAliens()
+void Game::MoveAliens() //move aliens screen left and right
 {
 
     for(auto&alien : aliens){
@@ -174,14 +175,14 @@ void Game::MoveAliens()
     }
 }
 
-void Game::MoveDownAliens(int distance)
+void Game::MoveDownAliens(int distance) //move aliens by downward by a distance
 {
     for(auto&alien : aliens){
         alien.position.y += distance;
     }
 }
 
-void Game::AlienPushpaBulletuu()
+void Game::AlienPushpaBulletuu() //random alien fires a bullet after a time interval
 {
     double currentTime = GetTime();
     if(currentTime - timeLastAlienPushpaad >= AlienBulletPushpainterval && !aliens.empty()){
@@ -196,7 +197,7 @@ void Game::AlienPushpaBulletuu()
 }
 
 
-void Game::CheckForCollisions()
+void Game::CheckForCollisions() //collision detection for bullets,spaceships,aliens,obstacles
 {
     // Spaceship bulletsuu
     for(auto& bulletuu : spaceship.bullets){
@@ -221,7 +222,7 @@ void Game::CheckForCollisions()
             }
         }
         
-        for(auto& obstacle: obstacles){
+        for(auto& obstacle: obstacles){ //bullets hitting obstacle blocks
             auto it = obstacle.blocks.begin();
             while(it != obstacle.blocks.end()){
                 if(CheckCollisionRecs(it-> getRectangle(), bulletuu.getRectangle())){
@@ -233,7 +234,7 @@ void Game::CheckForCollisions()
             }
         }
 
-        if(CheckCollisionRecs(mysteryship.getRectangle(),bulletuu.getRectangle())){
+        if(CheckCollisionRecs(mysteryship.getRectangle(),bulletuu.getRectangle())){ //bullets hitting mysterysip
             mysteryship.alive = false;
             bulletuu.active = false;
             score+=500;  //if mysteryship is pushpaad, then increase score by 500
@@ -292,7 +293,7 @@ void Game::GameOver()
     run = false;  //if game over, then the run will set to false
 }
 
-void Game::InitGame()
+void Game::InitGame() //reset all game variables at start of game
 {  //initialises all the methods
     obstacles = CreateObstacles();
     aliens = CreateAliens();
