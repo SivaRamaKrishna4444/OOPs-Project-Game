@@ -4,9 +4,12 @@
 
 Game ::Game()
 {
-    music = LoadMusicStream("Sounds/music.ogg");  //loading music (bgm)
-    explosionSound = LoadSound("Sounds/explosion.ogg");  //loading explosion sound
-    PlayMusicStream(music); //start playing background music
+
+    music = LoadMusicStream("Sounds/modi.mp3");  //loading music (bgm)
+    // explosionSound = LoadSound("Sounds/explosion.ogg");  //loading explosion sound
+    explosionSound = LoadSound("Sounds/sai_ramm2.ogg");
+    PlayMusicStream(music);
+
     InitGame();   //initialises the game
 }
 

@@ -13,9 +13,6 @@ int main()
     Color grey = {29,29,27,255}; //background colur of the game using RGBA
     Color yellow = {243,216,63,255};// color used for boarders and text
 
-    Color grey = {29,29,27,255};  //custom RGBA color creating a dark grey shade
-    Color yellow = {243,216,63,255};
-
     int offset = 50;
     int window_width = 750;   //width of window
     int window_height = 700;   //height of window
@@ -24,6 +21,7 @@ int main()
     InitAudioDevice();  //initialises the audio system
 
     Font font = LoadFontEx("Font/monogram.ttf",64,0,0); //loading the font for text 
+    SetTextureFilter(font.texture, TEXTURE_FILTER_POINT);  //for more clear without blurr
     Texture2D spaceshipImage = LoadTexture("images/spaceship.png");  //spaceship image for showing no.of lives remaining
 
     SetTargetFPS(60); // game framerate
@@ -34,9 +32,10 @@ int main()
 
     while(WindowShouldClose() == false)    //until we close that window or press Esc.. 
     {
-        UpdateMusicStream(game.music); //keep background music playing
         game.HandleInput();   //interactive with the input (like pressing left,right,space...)
-        game.Update();  //update game objects
+        game.Update();   //update game objects
+        UpdateMusicStream(game.music);   //keep background music playing
+
         BeginDrawing();
         ClearBackground(grey);   //backgorund colour to be grey.. 
         DrawRectangleRoundedLinesEx({10,10,780,780},0.18f,20,2,yellow);
